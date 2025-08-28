@@ -1,0 +1,5 @@
+*.pdf
+*.json
+.vscode
+__pycache__
+tr_output_*.txt

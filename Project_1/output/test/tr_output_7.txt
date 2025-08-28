@@ -1,0 +1,31 @@
+traceroute to italia.gov.it (93.147.186.222), 30 hops max, 60 byte packets
+ 1  _gateway (172.19.52.129)  0.245 ms  0.191 ms  0.163 ms
+ 2  1023-Boyd-BAgg-R.net.uga.edu (172.31.42.10)  0.773 ms 1057-Life-BAgg-R.net.uga.edu (172.31.43.10)  0.952 ms  1.217 ms
+ 3  0042-Peabody-Core-R.net.uga.edu (172.31.41.0)  0.709 ms 0042-Peabody-Core-R.net.uga.edu (172.31.41.2)  1.050 ms 1023-Boyd-Core-R.net.uga.edu (172.31.40.0)  0.762 ms
+ 4  Boyd-Border-Router.net.uga.edu (172.31.40.24)  0.174 ms  0.152 ms HSC-Internet-R.net.uga.edu (172.31.40.26)  0.182 ms
+ 5  HSC-PA-7050.net.uga.edu (172.31.47.17)  0.838 ms  0.816 ms HSC-PA-7050.net.uga.edu (172.31.47.33)  0.848 ms
+ 6  HSC-Internet-R.net.uga.edu (172.31.47.13)  1.058 ms Boyd-Border-Router.net.uga.edu (172.31.47.29)  0.985 ms HSC-Internet-R.net.uga.edu (172.31.47.13)  1.016 ms
+ 7  te0-11-0-2-8.ccr41.atl04.atlas.cogentco.com (38.122.46.161)  3.601 ms  3.586 ms  3.691 ms
+ 8  be2847.ccr41.atl01.atlas.cogentco.com (154.54.6.101)  3.541 ms  4.120 ms  3.985 ms
+ 9  port-channel3483.ccr92.dca04.atlas.cogentco.com (154.54.172.169)  19.849 ms port-channel3482.ccr91.dca04.atlas.cogentco.com (154.54.169.177)  19.829 ms port-channel3483.ccr92.dca04.atlas.cogentco.com (154.54.172.169)  19.809 ms
+10  be3026.ccr41.iad02.atlas.cogentco.com (154.54.45.178)  21.217 ms be8413.ccr41.iad02.atlas.cogentco.com (154.54.5.218)  21.823 ms be3026.ccr41.iad02.atlas.cogentco.com (154.54.45.178)  21.883 ms
+11  vodafone.iad02.atlas.cogentco.com (154.54.11.38)  21.155 ms  21.081 ms  21.035 ms
+12  ae13-xcr1.nyh.cw.net (195.2.30.26)  113.496 ms ae4-xcr3.prp.cw.net (195.2.25.246)  114.222 ms ae13-xcr1.nyh.cw.net (195.2.30.26)  113.643 ms
+13  et-10-3-0-xcr1.ptl.cw.net (195.2.24.242)  113.215 ms  113.300 ms  113.399 ms
+14  ae.9-xcr1.mlb.cw.net (195.2.9.90)  118.778 ms  113.898 ms ae18-xcr1.mlb.cw.net (195.2.31.117)  114.054 ms
+15  ae13-xcr1.mlb.cw.net (195.2.8.42)  113.896 ms  113.495 ms ae1-xcr1.mlk.cw.net (195.2.25.101)  113.897 ms
+16  vodafone-it-gw-mlk.cw.net (195.59.1.26)  114.573 ms  114.112 ms ae1-xcr1.mlk.cw.net (195.2.25.101)  113.211 ms
+17  * * *
+18  * * *
+19  * * *
+20  * * *
+21  * * *
+22  * * *
+23  * * *
+24  * * *
+25  * * *
+26  * * *
+27  * * *
+28  * * *
+29  * * *
+30  * * *

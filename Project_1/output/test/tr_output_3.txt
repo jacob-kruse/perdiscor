@@ -1,0 +1,31 @@
+traceroute to italia.gov.it (93.147.186.222), 30 hops max, 60 byte packets
+ 1  _gateway (172.19.52.129)  0.221 ms  0.212 ms  0.175 ms
+ 2  1023-Boyd-BAgg-R.net.uga.edu (172.31.42.10)  0.806 ms  0.771 ms  1.183 ms
+ 3  1023-Boyd-Core-R.net.uga.edu (172.31.40.2)  2.407 ms 0042-Peabody-Core-R.net.uga.edu (172.31.41.0)  7.256 ms 1023-Boyd-Core-R.net.uga.edu (172.31.40.0)  2.332 ms
+ 4  HSC-Internet-R.net.uga.edu (172.31.40.26)  0.205 ms Boyd-Border-Router.net.uga.edu (172.31.40.24)  0.169 ms HSC-Internet-R.net.uga.edu (172.31.40.26)  0.231 ms
+ 5  HSC-PA-7050.net.uga.edu (172.31.47.17)  0.875 ms  0.894 ms  0.912 ms
+ 6  Boyd-Border-Router.net.uga.edu (172.31.47.29)  1.214 ms  1.099 ms  1.087 ms
+ 7  te0-11-0-2-8.ccr41.atl04.atlas.cogentco.com (38.122.46.161)  3.673 ms  3.711 ms  3.797 ms
+ 8  be2847.ccr41.atl01.atlas.cogentco.com (154.54.6.101)  4.098 ms * *
+ 9  port-channel3482.ccr91.dca04.atlas.cogentco.com (154.54.169.177)  19.730 ms port-channel3483.ccr92.dca04.atlas.cogentco.com (154.54.172.169)  19.745 ms port-channel3482.ccr91.dca04.atlas.cogentco.com (154.54.169.177)  19.829 ms
+10  be3026.ccr41.iad02.atlas.cogentco.com (154.54.45.178)  21.280 ms be8413.ccr41.iad02.atlas.cogentco.com (154.54.5.218)  21.673 ms be3026.ccr41.iad02.atlas.cogentco.com (154.54.45.178)  21.266 ms
+11  vodafone.iad02.atlas.cogentco.com (154.54.11.38)  20.962 ms  21.114 ms  20.863 ms
+12  ae13-xcr1.nyh.cw.net (195.2.30.26)  113.598 ms  113.504 ms  113.463 ms
+13  ae28-tcr1.pat.cw.net (195.2.24.242)  113.044 ms ae10-xcr1.mrx.cw.net (195.2.25.18)  113.864 ms et-10-3-0-xcr1.ptl.cw.net (195.2.24.242)  113.520 ms
+14  ae18-xcr1.mlb.cw.net (195.2.31.117)  114.335 ms ae1-xcr1.pit.cw.net (195.2.20.173)  113.562 ms ae.9-xcr1.mlb.cw.net (195.2.9.90)  113.395 ms
+15  ae1-xcr1.mlk.cw.net (195.2.25.101)  114.053 ms ae13-xcr1.mlb.cw.net (195.2.8.42)  113.632 ms ae1-xcr1.mlk.cw.net (195.2.25.101)  114.012 ms
+16  ae1-xcr1.mlk.cw.net (195.2.25.101)  113.455 ms vodafone-it-gw-mlk.cw.net (195.59.1.26)  115.629 ms ae1-xcr1.mlk.cw.net (195.2.25.101)  113.348 ms
+17  vodafone-it-gw-mlk.cw.net (195.59.1.26)  114.740 ms  113.790 ms *
+18  * * *
+19  * * *
+20  * * *
+21  * * *
+22  * * *
+23  * * *
+24  * * *
+25  * * *
+26  * * *
+27  * * *
+28  * * *
+29  * * *
+30  * * *

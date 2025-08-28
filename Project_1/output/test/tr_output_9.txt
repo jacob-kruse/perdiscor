@@ -1,0 +1,31 @@
+traceroute to italia.gov.it (93.147.186.222), 30 hops max, 60 byte packets
+ 1  _gateway (172.19.52.129)  0.267 ms  0.246 ms  0.202 ms
+ 2  1057-Life-BAgg-R.net.uga.edu (172.31.43.10)  1.570 ms  1.530 ms  1.489 ms
+ 3  0042-Peabody-Core-R.net.uga.edu (172.31.41.0)  0.825 ms 1023-Boyd-Core-R.net.uga.edu (172.31.40.2)  0.937 ms  1.174 ms
+ 4  Boyd-Border-Router.net.uga.edu (172.31.40.24)  0.165 ms HSC-Internet-R.net.uga.edu (172.31.40.26)  0.181 ms Boyd-Border-Router.net.uga.edu (172.31.40.24)  0.142 ms
+ 5  HSC-PA-7050.net.uga.edu (172.31.47.33)  0.865 ms HSC-PA-7050.net.uga.edu (172.31.47.17)  0.930 ms  0.884 ms
+ 6  Boyd-Border-Router.net.uga.edu (172.31.47.29)  1.117 ms HSC-Internet-R.net.uga.edu (172.31.47.13)  0.996 ms Boyd-Border-Router.net.uga.edu (172.31.47.29)  1.060 ms
+ 7  te0-11-0-2-8.ccr41.atl04.atlas.cogentco.com (38.122.46.161)  3.996 ms  3.900 ms  3.806 ms
+ 8  be2848.ccr42.atl01.atlas.cogentco.com (154.54.6.117)  3.676 ms be2847.ccr41.atl01.atlas.cogentco.com (154.54.6.101)  3.757 ms  3.766 ms
+ 9  port-channel3483.ccr92.dca04.atlas.cogentco.com (154.54.172.169)  19.843 ms port-channel3482.ccr91.dca04.atlas.cogentco.com (154.54.169.177)  19.806 ms  19.818 ms
+10  be3026.ccr41.iad02.atlas.cogentco.com (154.54.45.178)  21.361 ms  21.252 ms  21.347 ms
+11  vodafone.iad02.atlas.cogentco.com (154.54.11.38)  21.181 ms  21.138 ms  21.228 ms
+12  ae13-xcr1.nyh.cw.net (195.2.30.26)  113.555 ms ae4-xcr3.prp.cw.net (195.2.25.246)  142.356 ms ae13-xcr1.nyh.cw.net (195.2.30.26)  113.283 ms
+13  ae28-tcr1.pat.cw.net (195.2.24.242)  113.297 ms  113.482 ms  113.092 ms
+14  ae18-xcr1.mlb.cw.net (195.2.31.117)  114.142 ms ae1-xcr1.pit.cw.net (195.2.20.173)  113.410 ms ae18-xcr1.mlb.cw.net (195.2.31.117)  114.120 ms
+15  ae1-xcr1.mlk.cw.net (195.2.25.101)  113.477 ms  113.164 ms ae13-xcr1.mlb.cw.net (195.2.8.42)  113.496 ms
+16  vodafone-it-gw-mlk.cw.net (195.59.1.26)  114.553 ms  114.345 ms  114.047 ms
+17  * vodafone-it-gw-mlk.cw.net (195.59.1.26)  114.137 ms *
+18  * * *
+19  * * *
+20  * * *
+21  * * *
+22  * * *
+23  * * *
+24  * * *
+25  * * *
+26  * * *
+27  * * *
+28  * * *
+29  * * *
+30  * * *

@@ -1,0 +1,190 @@
+[
+ {
+  "avg": 0.2079,
+  "hop": 0,
+  "hosts": [
+   "_gateway (172.19.52.129)"
+  ],
+  "max": 0.268,
+  "med": 0.209,
+  "min": 0.157
+ },
+ {
+  "avg": 1.0343103448275863,
+  "hop": 0,
+  "hosts": [
+   "1023-Boyd-BAgg-R.net.uga.edu (172.31.42.10)",
+   "1057-Life-BAgg-R.net.uga.edu (172.31.43.10)"
+  ],
+  "max": 1.57,
+  "med": 0.947,
+  "min": 0.745
+ },
+ {
+  "avg": 1.5366666666666666,
+  "hop": 0,
+  "hosts": [
+   "1023-Boyd-Core-R.net.uga.edu (172.31.40.0)",
+   "0042-Peabody-Core-R.net.uga.edu (172.31.41.2)",
+   "1023-Boyd-Core-R.net.uga.edu (172.31.40.2)",
+   "0042-Peabody-Core-R.net.uga.edu (172.31.41.0)"
+  ],
+  "max": 7.256,
+  "med": 0.909,
+  "min": 0.684
+ },
+ {
+  "avg": 0.19973333333333335,
+  "hop": 0,
+  "hosts": [
+   "HSC-Internet-R.net.uga.edu (172.31.40.26)",
+   "Boyd-Border-Router.net.uga.edu (172.31.40.24)",
+   "HSC-Internet-R.net.uga.edu (172.31.40.26)"
+  ],
+  "max": 0.272,
+  "med": 0.202,
+  "min": 0.137
+ },
+ {
+  "avg": 0.8791333333333333,
+  "hop": 0,
+  "hosts": [
+   "HSC-PA-7050.net.uga.edu (172.31.47.33)",
+   "HSC-PA-7050.net.uga.edu (172.31.47.17)"
+  ],
+  "max": 0.993,
+  "med": 0.8765,
+  "min": 0.815
+ },
+ {
+  "avg": 1.1004666666666667,
+  "hop": 0,
+  "hosts": [
+   "Boyd-Border-Router.net.uga.edu (172.31.47.29)",
+   "HSC-Internet-R.net.uga.edu (172.31.47.13)"
+  ],
+  "max": 1.269,
+  "med": 1.0935,
+  "min": 0.985
+ },
+ {
+  "avg": 3.7619,
+  "hop": 0,
+  "hosts": [
+   "te0-11-0-2-8.ccr41.atl04.atlas.cogentco.com (38.122.46.161)"
+  ],
+  "max": 3.996,
+  "med": 3.7585,
+  "min": 3.567
+ },
+ {
+  "avg": 3.82636,
+  "hop": 0,
+  "hosts": [
+   "be2847.ccr41.atl01.atlas.cogentco.com (154.54.6.101)",
+   "be2848.ccr42.atl01.atlas.cogentco.com (154.54.6.117)"
+  ],
+  "max": 4.237,
+  "med": 3.769,
+  "min": 3.54
+ },
+ {
+  "avg": 19.796466666666667,
+  "hop": 0,
+  "hosts": [
+   "port-channel3483.ccr92.dca04.atlas.cogentco.com (154.54.172.169)",
+   "port-channel3482.ccr91.dca04.atlas.cogentco.com (154.54.169.177)"
+  ],
+  "max": 19.878,
+  "med": 19.795,
+  "min": 19.729
+ },
+ {
+  "avg": 21.444166666666668,
+  "hop": 0,
+  "hosts": [
+   "be3026.ccr41.iad02.atlas.cogentco.com (154.54.45.178)",
+   "be8413.ccr41.iad02.atlas.cogentco.com (154.54.5.218)"
+  ],
+  "max": 22.466,
+  "med": 21.3785,
+  "min": 21.174
+ },
+ {
+  "avg": 21.071966666666665,
+  "hop": 0,
+  "hosts": [
+   "vodafone.iad02.atlas.cogentco.com (154.54.11.38)"
+  ],
+  "max": 21.353,
+  "med": 21.0935,
+  "min": 20.863
+ },
+ {
+  "avg": 114.58923333333334,
+  "hop": 0,
+  "hosts": [
+   "ae13-xcr1.nyh.cw.net (195.2.30.26)",
+   "ae4-xcr3.prp.cw.net (195.2.25.246)"
+  ],
+  "max": 142.356,
+  "med": 113.5,
+  "min": 113.032
+ },
+ {
+  "avg": 113.4257,
+  "hop": 0,
+  "hosts": [
+   "ae10-xcr1.mrx.cw.net (195.2.25.18)",
+   "ae28-tcr1.pat.cw.net (195.2.24.242)",
+   "et-10-3-0-xcr1.ptl.cw.net (195.2.24.242)"
+  ],
+  "max": 114.014,
+  "med": 113.406,
+  "min": 112.872
+ },
+ {
+  "avg": 113.89996666666666,
+  "hop": 0,
+  "hosts": [
+   "ae18-xcr1.mlb.cw.net (195.2.31.117)",
+   "ae1-xcr1.pit.cw.net (195.2.20.173)",
+   "ae.9-xcr1.mlb.cw.net (195.2.9.90)"
+  ],
+  "max": 118.778,
+  "med": 113.658,
+  "min": 113.158
+ },
+ {
+  "avg": 113.57166666666667,
+  "hop": 0,
+  "hosts": [
+   "ae1-xcr1.mlk.cw.net (195.2.25.101)",
+   "ae13-xcr1.mlb.cw.net (195.2.8.42)"
+  ],
+  "max": 114.239,
+  "med": 113.486,
+  "min": 113.164
+ },
+ {
+  "avg": 114.50493333333334,
+  "hop": 0,
+  "hosts": [
+   "vodafone-it-gw-mlk.cw.net (195.59.1.26)",
+   "ae1-xcr1.mlk.cw.net (195.2.25.101)"
+  ],
+  "max": 131.073,
+  "med": 113.781,
+  "min": 113.211
+ },
+ {
+  "avg": 114.1004,
+  "hop": 0,
+  "hosts": [
+   "vodafone-it-gw-mlk.cw.net (195.59.1.26)"
+  ],
+  "max": 114.74,
+  "med": 114.085,
+  "min": 113.79
+ }
+]
