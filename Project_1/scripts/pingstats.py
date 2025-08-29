@@ -26,7 +26,7 @@ def main():
         help="Path and name of output PDF file containing stats graph",
     )
     parser.add_argument(
-        "-t", dest="target", default="www.google.com", help="A target domain name or IP address (required if --test is absent)"
+        "-t", dest="target", default="www.google.com", help="A target domain name or IP address"
     )
 
     # Assign arguments to variables

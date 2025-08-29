@@ -27,7 +27,7 @@ def main():
         help="Path and name of output PDF file containing stats graph",
     )
     parser.add_argument(
-        "-t", dest="target", default="italia.gov.it", help="A target domain name or IP address (required if --test is absent)"
+        "-t", dest="target", default="italia.gov.it", help="A target domain name or IP address"
     )
     parser.add_argument(
         "--test",
@@ -49,7 +49,8 @@ def main():
     target = args.target
     test_dir = args.test_dir
 
-    # Define global arrays to be used later
+    # Define global variables to be used later
+    hops = None
     json_output = []
     hops_times = [[] for _ in range(max_hops)]
     hops_hosts = [[] for _ in range(max_hops)]
@@ -69,7 +70,7 @@ def main():
             sleep(run_delay)
 
     # Define the output files to be parsed
-    path = "tr_outputs" if test_dir == "" else test_dir
+    path = "../output/tr_outputs" if test_dir == "" else test_dir
 
     # Loop for num_runs to parse output files
     for i in range(1, num_runs + 1):
@@ -77,48 +78,66 @@ def main():
         with open(f"{path}/tr_output_{i}.txt") as f:
             lines = f.readlines()
 
+        # Define current_hops variable for next loop
+        current_hops = None
+
         # Loop for each line in the current output file
         for line in lines:
-            # Don't process header
-            if line != lines[0] and line != lines[-1]:
+            # Don't process header and empty lines
+            if line != lines[0] and line != '\n':
                 # Split the current line into its parts and extract the hop number
                 parts = line.split()
+                hop = int(parts[0])
                 hop_info = line[len(parts[0]) :].strip()
+
+                # Reassign current_hops to get total number of hops in current file
+                current_hops = hop
 
                 # Extract the data from the current hop
                 times = findall(r"([\d\.]+)\s+ms", hop_info)
                 times = [float(time) for time in times]
                 hosts = findall(r"[^\s\(\)]+\s+\([\d\.]+\)", hop_info)
 
-                hop_index = lines.index(line) - 1
+                # Subtract 1 from the hop for array assignment
+                hop_index = hop - 1
 
+                # Add the times of the current hop to the global array
                 hops_times[hop_index].extend(times)
+
+                # Check if there are any new hosts for the current hop and add them if there are any
                 new_hosts = [host for host in hosts if host not in hops_hosts[hop_index]]
                 hops_hosts[hop_index].extend(new_hosts)
 
-    # After going through each hop, modify the hops_times array to only contain hops with latencies
-    hops_times = [times for times in hops_times if len(times) > 0]
+        # If hops hasn't been defined or if the current file has more hops than previosuly assigned
+        if not hops or current_hops > hops:
+            hops = current_hops
+
+    # Modifiy the hops_times array so that it doesn't hold empty arrays for hops that never occurred
+    for i in range(max_hops - hops):
+        hops_times.pop()
 
     # Loop for each hop to calculate stats
     for hop_times in hops_times:
-        # Calculate the statistics for the current hop
-        avg = sum(hop_times) / len(hop_times)
-        maximum = max(hop_times)
-        med = round(median(hop_times), 4)
-        minimum = min(hop_times)
+        # Only do calculations if there are latency values
+        if len(hop_times) > 0:
+            # Calculate the statistics for the current hop
+            avg = sum(hop_times) / len(hop_times)
+            maximum = max(hop_times)
+            med = round(median(hop_times), 4)
+            minimum = min(hop_times)
 
-        # Define the JSON output for the current hop
-        hop_json_output = {
-            "avg": avg,
-            "hop": 0,
-            "hosts": hops_hosts[hops_times.index(hop_times)],
-            "max": maximum,
-            "med": med,
-            "min": minimum,
-        }
+            # Define the JSON output for the current hop
+            hop_json_output = {
+                "avg": avg,
+                "hop": (hops_times.index(hop_times) + 1),
+                "hosts": hops_hosts[hops_times.index(hop_times)],
+                "max": maximum,
+                "med": med,
+                "min": minimum,
+            }
 
-        # Append the current output to the running list
-        json_output.append(hop_json_output)
+            # Append the current output to the running list
+            json_output.append(hop_json_output)
 
     # Create the JSON file
     with open(output, "w") as json_file:
