@@ -1,0 +1,9 @@
+When comparing the outputs of "traceroute" and "ping", a number of things can be noted. The first thing that I noticed
+was that the "ping" command was generally more successful in reaching the target. More often than than not, the "traceroute"
+command never received a response from the target, even for large and seemingly easy to reach sites like "bing.com". This
+is likely due to the fac that the "traceroute" command asks for a response from each hop along the way to the target. It
+is possible that some of these hops have increased privacy or are unable to return packets back to my machine, which is the
+cause for the failure of the "traceroute" command. Another thing to note is that when both commands succeeded, the maximum,
+minimum, average, and median values for the target were relatively similar between the "traceroute" and "ping" commands. This
+is expected, but just goes to show the overall effect of the commands. Both of these observations have helped me learn more
+about the nature of the internet and how data is transmitted.
