@@ -26,9 +26,7 @@ def main():
         default="../output/box_plots/tr_plot.pdf",
         help="Path and name of output PDF file containing stats graph",
     )
-    parser.add_argument(
-        "-t", dest="target", default="italia.gov.it", help="A target domain name or IP address"
-    )
+    parser.add_argument("-t", dest="target", default="google.com", help="A target domain name or IP address")
     parser.add_argument(
         "--test",
         dest="test_dir",
@@ -84,7 +82,7 @@ def main():
         # Loop for each line in the current output file
         for line in lines:
             # Don't process header and empty lines
-            if line != lines[0] and line != '\n':
+            if line != lines[0] and line != "\n":
                 # Split the current line into its parts and extract the hop number
                 parts = line.split()
                 hop = int(parts[0])
@@ -108,11 +106,11 @@ def main():
                 new_hosts = [host for host in hosts if host not in hops_hosts[hop_index]]
                 hops_hosts[hop_index].extend(new_hosts)
 
-        # If hops hasn't been defined or if the current file has more hops than previosuly assigned
+        # If hops hasn't been defined or if the current file has more hops than previously assigned
         if not hops or current_hops > hops:
             hops = current_hops
 
-    # Modifiy the hops_times array so that it doesn't hold empty arrays for hops that never occurred
+    # Modify the hops_times array so that it doesn't hold empty arrays for hops that never occurred
     for i in range(max_hops - hops):
         hops_times.pop()
 

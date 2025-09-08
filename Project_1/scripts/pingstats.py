@@ -25,9 +25,7 @@ def main():
         default="../output/box_plots/ping_plot.pdf",
         help="Path and name of output PDF file containing stats graph",
     )
-    parser.add_argument(
-        "-t", dest="target", default="www.google.com", help="A target domain name or IP address"
-    )
+    parser.add_argument("-t", dest="target", default="www.google.com", help="A target domain name or IP address")
 
     # Assign arguments to variables
     args = parser.parse_args()

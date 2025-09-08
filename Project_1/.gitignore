@@ -1,0 +1,4 @@
+*.pdf
+*.json
+__pycache__
+tr_output_*.txt
