@@ -43,6 +43,21 @@ repos:
     -   id: flake8
         args: ["--max-line-length", "130"]
 
+  # C/C++ linting and formatting
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v16.0.6  # Match your clang-format version, can update
+    hooks:
+      - id: clang-format
+        args: ["-style=Google"]  # or "LLVM", "Mozilla", etc.
+        files: \.(c|cpp|h|hpp)$
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-tidy
+        args: [-checks=clang-diagnostic-return-type]
+        files: src/.*\.c
+
   # Spellcheck in comments and docs
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
