@@ -6,6 +6,7 @@
   <img src="img/Description_4.png" />
 </p>
 
+## Instructions
 This project implements C code to open a TCP socket, connect with TLS, and start parallel threads to perform a range download. To compile the code, go to the `/Project_2` folder and execute the make command.
 
     cd ~/perdiscor/Project_2
@@ -17,8 +18,11 @@ This will create a program called `http_downloader`. To execute with default val
 
 A number of arguments can be passed to this function. These are described below.
 
+* `-u HTTPS_URL`: This determines the URL or location of the desired object for download
+* `-n NUM_PARTS`: This determines how many parallel threads will be used and how many parts you will split the original object into
+* `-o OUTPUT_FILE`: This determines the output location of the final concatenated object
 
-For example, if you want to perform a range download for the object at `google.com` with 5 parallel threads and output it to `image.jpg`, you would use the following.
+For example, if you want to perform a range download for the object at `https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-one-color-white.svg` with 5 parallel threads and output it to `image.jpg`, you would use the following.
 
     ./http_downloader -u https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-one-color-white.svg -n 5 -o image.jpg
 
