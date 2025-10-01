@@ -93,10 +93,10 @@ void *range_download(void *arg) {
   SSL_connect(ssl);
 
   // Define a buffer to hold the output file string
-  char output[9];
+  char output[17];
 
   // Define the output string by appending the part number
-  sprintf(output, "part_%d", args->part);
+  sprintf(output, "part_%d", (args->part + 1));
 
   // Define and open the file for saving the image
   FILE *fp = fopen(output, "wb");
@@ -450,7 +450,7 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < num_parts; i++) {
     // Define the output string by appending the part number
     char file[17];
-    sprintf(file, "part_%d", i);
+    sprintf(file, "part_%d", (i + 1));
 
     // Open one of the thread output files for reading
     FILE *in_fp = fopen(file, "rb");
