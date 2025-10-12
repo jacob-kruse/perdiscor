@@ -4,12 +4,12 @@
 This script acts as DNS Forwarder that blocks requests to specified domains
 """
 
-import requests
-from argparse import ArgumentParser
+from requests import get
 from csv import reader, writer
-from scapy.sendrecv import sniff, sr1
-from socket import socket, AF_INET, SOCK_DGRAM
-from scapy.layers.dns import DNS, DNSQR, IP, UDP, dnsqtypes
+from argparse import ArgumentParser
+from base64 import urlsafe_b64encode
+from scapy.layers.dns import DNS, DNSQR, dnsqtypes
+from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
     parser.add_argument("-f", dest="deny_list_file", default="deny_list.csv", help="File containing domains to block")
     parser.add_argument("-l", dest="log_file", default="log.csv", help="Append-only log file")
     parser.add_argument("--doh", dest="doh", action="store_true", help="Use default upstream DoH server")
-    parser.add_argument("--doh_server", dest="doh_server", default="192.1.1.1", help="Use this upstream DoH server")
+    parser.add_argument("--doh_server", dest="doh_server", default="8.8.8.8", help="Use this upstream DoH server")
 
     # Assign arguments to variables
     args = parser.parse_args()
@@ -52,31 +52,13 @@ class DNSForwarder:
         self.doh = doh
         self.doh_server = doh_server
 
-    def begin_sniff(self):
-        # Begin to sniff packets
-        sniff(prn=self.sniff_callback, store=False)
+        # Determine the DNS forwarding socket type based on whether or not DoH is desired
+        socket_type = SOCK_STREAM if doh else SOCK_DGRAM
 
-    def sniff_callback(self, msg):
-        # If the sniffed packet has DNS and DNS Query sections and the if the message is a query not reply (qr = 0)
-        if msg.haslayer(DNS) and msg.haslayer(DNSQR) and msg[DNS].qr == 0:
-            print(msg[DNSQR].qname.decode().rstrip("."))
-            print(msg[DNSQR].qtype)
-            qtype = msg[DNSQR].qtype
-
-            # Extract the qname from the DNS Query part of the message and convert from bytes for the domain
-            domain = msg[DNSQR].qname.decode().rstrip(".")
-
-            # Pass the domain to the check_domain() function to see if it is blocked
-            blocked = self.check_domain(domain)
-
-            # After determining the status of the desired domain, add to the logger
-            self.log_domain(domain, blocked, "A")
-
-    def listen(self):
         # Create sockets, AF_INET=IPv4, SOCK_DGRAM=UDP
         temp_sock = socket(AF_INET, SOCK_DGRAM)
-        req_sock = socket(AF_INET, SOCK_DGRAM)
-        dns_sock = socket(AF_INET, SOCK_DGRAM)
+        self.req_sock = socket(AF_INET, SOCK_DGRAM)
+        self.dns_sock = socket(AF_INET, socket_type)
 
         # Connect to the temporary socket, get the socket name to extract the device's IP, and close the socket
         temp_sock.connect(("8.8.8.8", 80))
@@ -84,34 +66,54 @@ class DNSForwarder:
         temp_sock.close()
 
         # Bind the request socket to this device's IP and port 53 (Port for DNS requests)
-        req_sock.bind((local_ip, 53))
+        self.req_sock.bind((local_ip, 53))
 
+    def listen(self):
         # Start loop
         while True:
-            # Listen for DNS requests to the server
-            req, addr = req_sock.recvfrom(512)
+            # Listen for DNS requests to the server on the request socket
+            request, address = self.req_sock.recvfrom(512)
 
-            # Transform the raw bytes into a readable DNS message and get the domain and query type from the request
-            dns_req = DNS(req)
-            domain = dns_req[DNSQR].qname.decode().rstrip(".")
-            qt = dns_req[DNSQR].qtype
-            q_type = dnsqtypes.get(qt, str(qt))
-            print(f"Received DNS Query for '{domain}' {q_type}")
+            # Pass the request and client address to the handle_request() function
+            self.handle_request(request, address)
 
-            # Check if the domain is blocked
-            blocked = self.check_domain(domain)
+    def handle_request(self, request, address):
+        # Transform the raw bytes into a readable DNS message, then get the domain and query type from the request
+        dns_request = DNS(request)
+        domain = dns_request[DNSQR].qname.decode().rstrip(".")
+        qt = dns_request[DNSQR].qtype
+        q_type = dnsqtypes.get(qt, str(qt))
 
-            # Send the DNS request to the upstream DNS server, and listen for a response
-            print("Forwarding DNS Query")
-            dns_sock.sendto(req, (self.dst_ip, 53))
-            resp, _ = dns_sock.recvfrom(512)
-            print("Received from DNS Resolver")
+        # Check if the domain is blocked
+        blocked = self.check_domain(domain)
 
-            # Log whether or not the domain was blocked and the query type
-            self.log_domain(domain, blocked, q_type)
+        # If the domain is blocked, return an NXDomain response
+        if blocked:
+            # Construct the NXDomain response based on the request, then convert it to bytes
+            # Response: qr=1, Recursion Available: ra=1, NXDomain: rcode=3, No Additional Records: ar=None
+            dns_response = DNS(request, qr=1, ra=1, ad=0, rcode=3, arcount=0, ar=None)
+            response = bytes(dns_response)
 
-            # Forward the DNS response back to the client
-            req_sock.sendto(resp, addr)
+        # If the domain is not blocked, forward the request to the desired DNS resolver
+        elif not blocked:
+            # If DoH requests are desired
+            if self.doh:
+                # Convert the request from bytes -> Base64, send the GET request to the DoH server, and extract the content
+                b64_request = urlsafe_b64encode(request).rstrip(b"=").decode()
+                doh_response = get(f"https://{self.doh_server}/dns-query?dns={b64_request}")
+                response = doh_response.content
+
+            # If normal DNS request over UDP are desired
+            elif not self.doh:
+                # Send the DNS request to the upstream DNS server, and listen for a response
+                self.dns_sock.sendto(request, (self.dst_ip, 53))
+                response, _ = self.dns_sock.recvfrom(512)
+
+        # Log whether or not the domain was blocked and the query type
+        self.log_domain(domain, blocked, q_type)
+
+        # Forward the DNS response back to the client
+        self.req_sock.sendto(response, address)
 
     def check_domain(self, domain):
         # Define the blocked variable to be False
@@ -145,53 +147,8 @@ class DNSForwarder:
             write_file.writerow([f"{domain} {q_type} {decision}"])
 
     def test(self):
-        # # Define the DNS request, "rd=1" means recursion
-        # dns_req = DNS(rd=1, qd=DNSQR(qname='www.example.com'))
+        pass
 
-        # # Convert the request to binary
-        # b = bytes(dns_req)
-
-        # # Redefine the DNS request
-        # p = DNS(b)
-
-        domain = "eaxlpe.com"
-
-        # # Show the DNS request
-        # p.show()
-
-        dns_request = IP(dst="9.9.9.9") / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname=domain))
-        response = sr1(dns_request, verbose=0, timeout=2)
-
-        response.show()
-
-        # r = requests.get(f"https://{domain}")
-        # print(r.status_code)
-        # print(r)
-
-
-"""
-NXDOMAIN Example
------------------------------
-; <<>> DiG 9.18.39-0ubuntu0.24.04.1-Ubuntu <<>> @9.9.9.9 -t A www.eaxpmel.com
-; (1 server found)
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 35601
-;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
-
-;; OPT PSEUDOSECTION:
-; EDNS: version: 0, flags:; udp: 1232
-;; QUESTION SECTION:
-;www.eaxpmel.com.		IN	A
-
-;; AUTHORITY SECTION:
-com.			895	IN	SOA	a.gtld-servers.net. nstld.verisign-grs.com. 1760103674 1800 900 604800 900
-
-;; Query time: 16 msec
-;; SERVER: 9.9.9.9#53(9.9.9.9) (UDP)
-;; WHEN: Fri Oct 10 09:41:39 EDT 2025
-;; MSG SIZE  rcvd: 117
-"""
 
 if __name__ == "__main__":
     main()
