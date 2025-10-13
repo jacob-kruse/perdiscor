@@ -65,8 +65,9 @@ class DNSForwarder:
         local_ip = temp_sock.getsockname()[0]
         temp_sock.close()
 
-        # Bind the request socket to this device's IP and port 53 (Port for DNS requests)
+        # Bind the request socket to this device's IP and port 53 (Port for DNS requests) and print the IP
         self.req_sock.bind((local_ip, 53))
+        print(f"This machine's IP: {local_ip}")
 
     def listen(self):
         # Start loop
