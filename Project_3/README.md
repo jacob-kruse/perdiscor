@@ -17,14 +17,10 @@ In order to execute the DNS forwarder, two external Python libraries must be dow
 
     pip install scapy requests
 
-With these installed, you can now run the Python script `dns_dorwarder.py`. Because the program is opening a UDP socket at port 53, root privileges are required. First activate your Python environment where you installed the libraries above. Then use the following command to get the path to this environment.
-
-    which python
-
-Copy the output from the terminal and paste it into the following command to run `dns_forwarder.py`.
+With these installed, you can now run the Python script `dns_dorwarder.py`. Because the program is opening a UDP socket at port 53, root privileges are required. First, activate your Python environment where you installed the libraries above. Then use the following commands to enter the correct folder and to run `dns_forwarder.py`.
 
     cd ~/perdiscor/Project_3
-    sudo <python path> dns_forwarder.py
+    sudo $(which python) dns_forwarder.py
 
 A number of arguments can be passed to this function. These are described below.
 

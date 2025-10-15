@@ -70,13 +70,23 @@ class DNSForwarder:
         print(f"This machine's IP: {local_ip}")
 
     def listen(self):
-        # Start loop
-        while True:
-            # Listen for DNS requests to the server on the request socket
-            request, address = self.req_sock.recvfrom(512)
+        # Define local variable to be True for loop
+        active = True
 
-            # Pass the request and client address to the handle_request() function
-            self.handle_request(request, address)
+        # Start loop
+        while active:
+            # Try statemnt to handle exceptions
+            try:
+                # Listen for DNS requests to the server on the request socket
+                request, address = self.req_sock.recvfrom(512)
+
+                # Pass the request and client address to the handle_request() function
+                self.handle_request(request, address)
+
+            # Add a Keyboard Interrupt exception to gracefully exit recvfrom() function
+            except KeyboardInterrupt:
+                active = False
+                print("")
 
     def handle_request(self, request, address):
         # Transform the raw bytes into a readable DNS message, then get the domain and query type from the request
