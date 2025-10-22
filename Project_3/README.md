@@ -30,9 +30,9 @@ A number of arguments can be passed to this function. These are described below.
 * `--doh`: Use default upstream DoH server  (Default: False)
 * `--doh_server DOH_SERVER`: Use this upstream DoH server  (Default="8.8.8.8")
 
-For example, if your Python environment is located at `/home/jkruse/anaconda3/envs/dns/bin/python`, you wish to use the DoH protocol for server `8.8.8.8`, and the deny list is located at `~/deny_list.csv`, you would use the following command.
+For example, if you wanted to use the DoH protocol for server `8.8.8.8`, and the deny list is located at `~/deny_list.csv`, you would use the following command.
 
-    sudo /home/jkruse/anaconda3/envs/dns/bin/python dns_forwarder.py -f ~/deny_list.csv --doh --doh_server 8.8.8.8
+    sudo $(which python) dns_forwarder.py -f ~/deny_list.csv --doh --doh_server 8.8.8.8
 
 With the DNS Forwarder running, you can now send DNS queries to the program using `dig`. The script `dns_forwarder.py` will print the IP address of the machine on which it is running. With the DNS Forwarder running, in another terminal or on another machine, use the following command with the IP address printed by `dns_forwarder.py`.
 
