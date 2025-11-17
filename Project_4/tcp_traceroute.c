@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
   // Define defaults for command-line arguments
   int max_hops = 30;
   int dst_port = 80;
-  char *target = "192.19.19.19";
+  char *target = "google.com";
   bool help = false;
 
   // Parse passed arguments, if any
