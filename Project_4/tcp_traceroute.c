@@ -331,6 +331,8 @@ int main(int argc, char *argv[]) {
     double second_time;
     char first_addr[INET_ADDRSTRLEN];
     char second_addr[INET_ADDRSTRLEN];
+    char first_host[NI_MAXHOST];
+    char second_host[NI_MAXHOST];
 
     // Loop for three probes
     for (int probe = 1; probe <= 3; probe++) {
@@ -338,6 +340,7 @@ int main(int argc, char *argv[]) {
       double rtt = 0.0;
       struct timeval send_time, recv_time;
       char addrstr[INET_ADDRSTRLEN];
+      char host[NI_MAXHOST];
 
       // Get the current time and apply it to send_time before sending
       gettimeofday(&send_time, NULL);
@@ -406,6 +409,17 @@ int main(int argc, char *argv[]) {
 
           // Convert the binary address to a string
           inet_ntop(AF_INET, &recv_addr.sin_addr, addrstr, sizeof addrstr);
+
+          // Resolve the domain
+          int resolved =
+              getnameinfo((struct sockaddr *)&recv_addr, sizeof(recv_addr),
+                          host, sizeof(host), NULL, 0, NI_NAMEREQD);
+
+          // If the domain could not be resolved
+          if (resolved != 0) {
+            // Assign the host to be the IP
+            snprintf(host, sizeof(host), "%s", addrstr);
+          }
         }
 
         // If the TCP socket has data
@@ -442,40 +456,50 @@ int main(int argc, char *argv[]) {
           struct tcphdr *tcp_tcp_header =
               (struct tcphdr *)(tcp_buffer + tcp_ip_header_length);
 
-          // printf("%d\n", src_addr.sin_addr.s_addr);
-          // printf("%d\n", tcp_ip_header->saddr);
+          // If received IP is the same as the local or loopback IP
+          if (tcp_ip_header->saddr == src_addr.sin_addr.s_addr ||
+              tcp_ip_header->saddr == htonl(INADDR_LOOPBACK)) {
+            // Set the address to "*" (invalid)
+            strcpy(addrstr, "*");
+          }
 
-          // if (tcp_ip_header->saddr == src_addr.sin_addr.s_addr) {
-          //   printf("HERE\n");
-          //   continue;
-          // }
+          else {
+            // Convert the binary address to a string
+            inet_ntop(AF_INET, &recv_addr.sin_addr, addrstr, sizeof addrstr);
 
-          // Convert the binary address to a string
-          inet_ntop(AF_INET, &recv_addr.sin_addr, addrstr, sizeof addrstr);
+            // Resolve the domain
+            int resolved =
+                getnameinfo((struct sockaddr *)&recv_addr, sizeof(recv_addr),
+                            host, sizeof(host), NULL, 0, NI_NAMEREQD);
 
-          // Extract the SYN, ACK, and RST flags from the TCP header
-          // SYN/ACK or RST means we have reached the server
-          synack = (tcp_tcp_header->syn && tcp_tcp_header->ack);
-          rst = tcp_tcp_header->rst;
+            // If the domain could not be resolved
+            if (resolved != 0) {
+              // Assign the host to be the IP
+              snprintf(host, sizeof(host), "%s", addrstr);
+            }
+
+            // Extract the SYN, ACK, and RST flags from the TCP header
+            // SYN/ACK or RST means we have reached the server
+            synack = (tcp_tcp_header->syn && tcp_tcp_header->ack);
+            rst = tcp_tcp_header->rst;
+          }
         }
       }
 
       // If this is the first probe
       if (probe == 1) {
-        // Assign the rtt and copy the address to the "first" variables
+        // Assign the rtt and host and copy the address to the "first" variables
         first_time = rtt;
+        strncpy(first_host, host, NI_MAXHOST);
         strncpy(first_addr, addrstr, INET_ADDRSTRLEN);
-        // strncpy(first_addr, addrstr, INET_ADDRSTRLEN - 1);
-        // second_addr[INET_ADDRSTRLEN - 1] = '\0';
       }
 
       // If this is the second probe
       else if (probe == 2) {
-        // Assign the rtt and copy the address to the "second" variables
+        // Assign rtt and host and copy the address to the "second" variables
         second_time = rtt;
+        strncpy(second_host, host, NI_MAXHOST);
         strncpy(second_addr, addrstr, INET_ADDRSTRLEN);
-        // strncpy(second_addr, addrstr, INET_ADDRSTRLEN - 1);
-        // second_addr[INET_ADDRSTRLEN - 1] = '\0';
       }
 
       // If this is the third probe
@@ -484,26 +508,70 @@ int main(int argc, char *argv[]) {
         bool first_second = strcmp(first_addr, second_addr) == 0;
         bool first_third = strcmp(first_addr, addrstr) == 0;
         bool second_third = strcmp(second_addr, addrstr) == 0;
+        bool first_invalid = strcmp(first_addr, "*") == 0;
+        bool second_invalid = strcmp(second_addr, "*") == 0;
+        bool third_invalid = strcmp(addrstr, "*") == 0;
 
         // Print result based on different addresses
         if (first_second && first_third && second_third) {
-          printf("(%s)  %.3f ms %.3f ms %.3f ms\n", addrstr, first_time,
-                 second_time, rtt);
-          if (synack || rst) {
-            terminate = true;
+          if (first_invalid) {
+            printf("* * *\n");
+          } else {
+            printf("%s (%s)  %.3f ms %.3f ms %.3f ms\n", host, addrstr,
+                   first_time, second_time, rtt);
+            if (synack || rst) {
+              terminate = true;
+            }
           }
         } else if (first_second && !first_third && !second_third) {
-          printf("(%s)  %.3f ms  %.3f ms  (%s)  %.3f ms\n", first_addr,
-                 first_time, second_time, addrstr, rtt);
+          if (first_invalid) {
+            printf("* * %s (%s)  %.3f ms\n", host, addrstr, rtt);
+          } else if (third_invalid) {
+            printf("%s (%s)  %.3f ms  %.3f ms *\n", first_host, first_addr,
+                   first_time, second_time);
+          } else {
+            printf("%s (%s)  %.3f ms  %.3f ms %s (%s)  %.3f ms\n", first_host,
+                   first_addr, first_time, second_time, host, addrstr, rtt);
+          }
         } else if (!first_second && first_third && !second_third) {
-          printf("(%s)  %.3f ms  %.3f ms  (%s)  %.3f ms\n", addrstr, first_time,
-                 rtt, second_addr, second_time);
+          if (first_invalid) {
+            printf("* * %s (%s)  %.3f ms\n", second_host, second_addr,
+                   second_time);
+          } else if (second_invalid) {
+            printf("%s (%s)  %.3f ms  %.3f ms *\n", first_host, first_addr,
+                   first_time, rtt);
+          } else {
+            printf("%s (%s)  %.3f ms  %.3f ms %s (%s)  %.3f ms\n", host,
+                   addrstr, first_time, rtt, second_host, second_addr,
+                   second_time);
+          }
         } else if (!first_second && !first_third && second_third) {
-          printf("(%s)  %.3f ms  (%s)  %.3f ms  %.3f ms\n", first_addr,
-                 first_time, addrstr, second_time, rtt);
+          if (second_invalid) {
+            printf("* * %s (%s)  %.3f ms\n", first_host, first_addr,
+                   first_time);
+          } else if (first_invalid) {
+            printf("* %s (%s)  %.3f ms  %.3f ms\n", second_host, second_addr,
+                   second_time, rtt);
+          } else {
+            printf("%s (%s)  %.3f ms %s (%s)  %.3f ms  %.3f ms\n", first_host,
+                   first_addr, first_time, host, addrstr, second_time, rtt);
+          }
         } else if (!first_second && !first_third && !second_third) {
-          printf("(%s)  %.3f ms  (%s)  %.3f ms  (%s) %.3f ms\n", first_addr,
-                 first_time, second_addr, second_time, addrstr, rtt);
+          if (first_invalid) {
+            printf("* %s (%s)  %.3f ms %s (%s) %.3f ms\n", second_host,
+                   second_addr, second_time, host, addrstr, rtt);
+          } else if (second_invalid) {
+            printf("%s (%s)  %.3f ms * %s (%s) %.3f ms\n", first_host,
+                   first_addr, first_time, host, addrstr, rtt);
+          } else if (third_invalid) {
+            printf("%s (%s)  %.3f ms %s (%s)  %.3f ms *\n", first_host,
+                   first_addr, first_time, second_host, second_addr,
+                   second_time);
+          } else {
+            printf("%s (%s)  %.3f ms %s (%s)  %.3f ms %s (%s) %.3f ms\n",
+                   first_host, first_addr, first_time, second_host, second_addr,
+                   second_time, host, addrstr, rtt);
+          }
         }
       }
     }
