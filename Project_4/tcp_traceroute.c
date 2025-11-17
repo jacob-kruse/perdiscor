@@ -380,8 +380,6 @@ int main(int argc, char *argv[]) {
       // Handle the select() function return
       if (rv == -1) {
         perror("select");
-      } else if (rv == 0) {
-        printf("Timeout occurred\n");
       } else {
         // If the ICMP socket has data
         if (FD_ISSET(icmp_sock, &readfds)) {
@@ -456,9 +454,8 @@ int main(int argc, char *argv[]) {
           struct tcphdr *tcp_tcp_header =
               (struct tcphdr *)(tcp_buffer + tcp_ip_header_length);
 
-          // If received IP is the same as the local or loopback IP
-          if (tcp_ip_header->saddr == src_addr.sin_addr.s_addr ||
-              tcp_ip_header->saddr == htonl(INADDR_LOOPBACK)) {
+          // If received IP is not the destination IP
+          if (tcp_ip_header->saddr != destination.sin_addr.s_addr) {
             // Set the address to "*" (invalid)
             strcpy(addrstr, "*");
           }
